@@ -197,3 +197,20 @@ resource "aws_route_table_association" "database" {
   subnet_id      = element(aws_subnet.database[*].id,count.index)
   route_table_id = aws_route_table.database.id
 }
+
+#data base subnet group
+#for HA
+#Need to create database subnet group
+#RDS 
+
+resource "aws_db_subnet_group" "default" {
+  name       = local.resource_name
+  subnet_ids = aws_subnet.database[*].id
+  tags = merge(
+    var.common_tags,
+    var.database_subnet_group_tags,
+    {
+      Name=local.resource_name
+    }
+  )
+}
